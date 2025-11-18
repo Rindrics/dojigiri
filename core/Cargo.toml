@@ -1,0 +1,10 @@
+[package]
+name = "dojigiri-core"
+version = "0.1.0"
+edition = "2024"
+authors = ["Akira Hayashi"]
+license = "MIT"
+description = "Core engine for dojigiri - a CLI tool that generates DFD from domain models"
+repository = "https://github.com/Rindrics/doujigiri"
+
+[dependencies]
