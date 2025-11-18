@@ -48,6 +48,35 @@ impl DataFlow {
     }
 }
 
+/// Source location of an annotation in the source code
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AnnotationSource {
+    /// File path where the annotation was found
+    pub file_path: String,
+    /// Line number where the annotation was found (1-based)
+    pub line_number: usize,
+    /// Column number where the annotation starts (1-based, optional)
+    pub column_number: Option<usize>,
+}
+
+impl AnnotationSource {
+    pub fn new(file_path: String, line_number: usize) -> Self {
+        Self {
+            file_path,
+            line_number,
+            column_number: None,
+        }
+    }
+
+    pub fn with_column(file_path: String, line_number: usize, column_number: usize) -> Self {
+        Self {
+            file_path,
+            line_number,
+            column_number: Some(column_number),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -142,5 +171,35 @@ mod tests {
 
         assert_eq!(flow1, flow2);
         assert_ne!(flow1, flow3);
+    }
+
+    #[test]
+    fn test_annotationsource_new() {
+        let source = AnnotationSource::new("src/model.rs".to_string(), 10);
+
+        assert_eq!(source.file_path, "src/model.rs");
+        assert_eq!(source.line_number, 10);
+        assert_eq!(source.column_number, None);
+    }
+
+    #[test]
+    fn test_annotationsource_with_column() {
+        let source = AnnotationSource::with_column("src/model.rs".to_string(), 10, 5);
+
+        assert_eq!(source.file_path, "src/model.rs");
+        assert_eq!(source.line_number, 10);
+        assert_eq!(source.column_number, Some(5));
+    }
+
+    #[test]
+    fn test_annotationsource_equality() {
+        let source1 = AnnotationSource::new("src/model.rs".to_string(), 10);
+        let source2 = AnnotationSource::new("src/model.rs".to_string(), 10);
+        let source3 = AnnotationSource::new("src/model.rs".to_string(), 20);
+        let source4 = AnnotationSource::with_column("src/model.rs".to_string(), 10, 5);
+
+        assert_eq!(source1, source2);
+        assert_ne!(source1, source3);
+        assert_ne!(source1, source4);
     }
 }

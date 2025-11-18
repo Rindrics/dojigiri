@@ -1,6 +1,6 @@
 mod model;
 
-use model::{DataFlow, Entity, EntityType};
+use model::{AnnotationSource, DataFlow, Entity, EntityType};
 
 fn main() {
     println!("dojigiri-core");
@@ -49,5 +49,14 @@ fn main() {
     println!(
         "  From: {} -> To: {}, Label: {}",
         data_flow.from, data_flow.to, data_flow.label
+    );
+
+    // Tracer bullet: Create and display annotation source
+    let source = AnnotationSource::with_column("src/model.rs".to_string(), 42, 5);
+
+    println!("\nAnnotation source created:");
+    println!(
+        "  File: {}, Line: {}, Column: {:?}",
+        source.file_path, source.line_number, source.column_number
     );
 }
