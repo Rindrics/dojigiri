@@ -8,24 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
+      pull-requests: write
+      issues: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Rust
-        uses: actions-rs/toolchain@v1
+        uses: actions/checkout@v5
         with:
-          toolchain: stable
-          override: true
-
-      - name: Install tagpr
-        run: |
-          cargo install tagpr
+          persist-credentials: false
 
       - name: Run tagpr
+        uses: Songmu/tagpr@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tagpr release
 
