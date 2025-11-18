@@ -73,12 +73,20 @@ fn main() {
     let type_kind = AnnotationKind::Type {
         entity_type: EntityType::DataStore,
     };
+    let display_kind = AnnotationKind::Display {
+        display_name: "User Repository".to_string(),
+    };
     let flow_kind = AnnotationKind::Flow {
         to: "CreateUser".to_string(),
         label: "user_data".to_string(),
     };
+    let process_kind = AnnotationKind::Process {
+        name: "CreateUser".to_string(),
+    };
 
     println!("\nAnnotation kinds created:");
     println!("  {:?}", type_kind);
+    println!("  {:?}", display_kind);
     println!("  {:?}", flow_kind);
+    println!("  {:?}", process_kind);
 }
