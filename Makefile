@@ -1,4 +1,4 @@
-.PHONY: build clean test run help
+.PHONY: build build-release clean test run check fmt fmt-check clippy help
 
 # Default target
 .DEFAULT_GOAL := help
@@ -39,7 +39,11 @@ fmt: ## Format code
 	@echo "Formatting code..."
 	cd $(CORE_DIR) && cargo fmt
 
+fmt-check: ## Check code formatting
+	@echo "Checking code formatting..."
+	cd $(CORE_DIR) && cargo fmt -- --check
+
 clippy: ## Run clippy linter
 	@echo "Running clippy..."
-	cd $(CORE_DIR) && cargo clippy
+	cd $(CORE_DIR) && cargo clippy -- -D warnings
 

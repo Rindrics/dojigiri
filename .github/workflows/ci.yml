@@ -18,22 +18,14 @@ jobs:
           components: rustfmt, clippy
 
       - name: Check formatting
-        working-directory: ./core
-        run: |
-          cargo fmt -- --check
+        run: make fmt-check
 
       - name: Run clippy
-        working-directory: ./core
-        run: |
-          cargo clippy -- -D warnings
+        run: make clippy
 
       - name: Run tests
-        working-directory: ./core
-        run: |
-          cargo test
+        run: make test
 
       - name: Build
-        working-directory: ./core
-        run: |
-          cargo build --release
+        run: make build-release
 
