@@ -52,11 +52,20 @@ fn main() {
     );
 
     // Tracer bullet: Create and display annotation source
-    let source = AnnotationSource::with_column("src/model.rs".to_string(), 42, 5);
+    let source_without_column = AnnotationSource::new("src/model.rs".to_string(), 10);
+    let source_with_column = AnnotationSource::with_column("src/model.rs".to_string(), 42, 5);
 
-    println!("\nAnnotation source created:");
+    println!("\nAnnotation sources created:");
     println!(
         "  File: {}, Line: {}, Column: {:?}",
-        source.file_path, source.line_number, source.column_number
+        source_without_column.file_path,
+        source_without_column.line_number,
+        source_without_column.column_number
+    );
+    println!(
+        "  File: {}, Line: {}, Column: {:?}",
+        source_with_column.file_path,
+        source_with_column.line_number,
+        source_with_column.column_number
     );
 }
