@@ -31,6 +31,23 @@ impl Entity {
     }
 }
 
+/// Represents a data flow between entities
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DataFlow {
+    /// Source entity ID
+    pub from: String,
+    /// Target entity ID
+    pub to: String,
+    /// Data flow label/description
+    pub label: String,
+}
+
+impl DataFlow {
+    pub fn new(from: String, to: String, label: String) -> Self {
+        Self { from, to, label }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -90,5 +107,40 @@ mod tests {
 
         assert_eq!(entity1, entity2);
         assert_ne!(entity1, entity3);
+    }
+
+    #[test]
+    fn test_dataflow_new() {
+        let flow = DataFlow::new(
+            "User".to_string(),
+            "CreateUser".to_string(),
+            "user_data".to_string(),
+        );
+
+        assert_eq!(flow.from, "User");
+        assert_eq!(flow.to, "CreateUser");
+        assert_eq!(flow.label, "user_data");
+    }
+
+    #[test]
+    fn test_dataflow_equality() {
+        let flow1 = DataFlow::new(
+            "User".to_string(),
+            "CreateUser".to_string(),
+            "user_data".to_string(),
+        );
+        let flow2 = DataFlow::new(
+            "User".to_string(),
+            "CreateUser".to_string(),
+            "user_data".to_string(),
+        );
+        let flow3 = DataFlow::new(
+            "User".to_string(),
+            "CreateUser".to_string(),
+            "different_label".to_string(),
+        );
+
+        assert_eq!(flow1, flow2);
+        assert_ne!(flow1, flow3);
     }
 }

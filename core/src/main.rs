@@ -1,6 +1,6 @@
 mod model;
 
-use model::{Entity, EntityType};
+use model::{DataFlow, Entity, EntityType};
 
 fn main() {
     println!("dojigiri-core");
@@ -36,5 +36,18 @@ fn main() {
     println!(
         "  ID: {}, Display: {}, Type: {:?}",
         external_api.id, external_api.display_name, external_api.entity_type
+    );
+
+    // Tracer bullet: Create and display data flow
+    let data_flow = DataFlow::new(
+        "User".to_string(),
+        "CreateUser".to_string(),
+        "user_data".to_string(),
+    );
+
+    println!("\nData flow created:");
+    println!(
+        "  From: {} -> To: {}, Label: {}",
+        data_flow.from, data_flow.to, data_flow.label
     );
 }
