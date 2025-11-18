@@ -1,6 +1,6 @@
 mod model;
 
-use model::{AnnotationKind, AnnotationSource, DataFlow, Entity, EntityType};
+use model::{AnnotationKind, AnnotationSource, DataFlow, Entity, EntityType, ParsedAnnotation};
 
 fn main() {
     println!("dojigiri-core");
@@ -89,4 +89,24 @@ fn main() {
     println!("  {:?}", display_kind);
     println!("  {:?}", flow_kind);
     println!("  {:?}", process_kind);
+
+    // Tracer bullet: Create and display parsed annotation
+    let parsed = ParsedAnnotation::new(
+        AnnotationKind::Flow {
+            to: "CreateUser".to_string(),
+            label: "user_data".to_string(),
+        },
+        AnnotationSource::with_column("src/user.rs".to_string(), 42, 5),
+        "User".to_string(),
+    );
+
+    println!("\nParsed annotation created:");
+    println!("  Symbol: {}", parsed.symbol_name);
+    println!("  Kind: {:?}", parsed.kind);
+    println!(
+        "  Source: {}:{}:{}",
+        parsed.source.file_path,
+        parsed.source.line_number,
+        parsed.source.column_number.unwrap_or(0)
+    );
 }

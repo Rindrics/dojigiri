@@ -113,6 +113,27 @@ pub enum AnnotationKind {
     },
 }
 
+/// Represents a parsed annotation from source code
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ParsedAnnotation {
+    /// Kind of annotation
+    pub kind: AnnotationKind,
+    /// Source location where this annotation was found
+    pub source: AnnotationSource,
+    /// Name of the symbol (class, struct, function, method, etc.) this annotation is attached to
+    pub symbol_name: String,
+}
+
+impl ParsedAnnotation {
+    pub fn new(kind: AnnotationKind, source: AnnotationSource, symbol_name: String) -> Self {
+        Self {
+            kind,
+            source,
+            symbol_name,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -289,5 +310,48 @@ mod tests {
             AnnotationKind::Process { name } => assert_eq!(name, "CreateUser"),
             _ => panic!("Expected Process variant"),
         }
+    }
+
+    #[test]
+    fn test_parsedannotation_new() {
+        let kind = AnnotationKind::Type {
+            entity_type: EntityType::DataStore,
+        };
+        let source = AnnotationSource::new("src/model.rs".to_string(), 10);
+        let parsed = ParsedAnnotation::new(kind.clone(), source.clone(), "User".to_string());
+
+        assert_eq!(parsed.kind, kind);
+        assert_eq!(parsed.source, source);
+        assert_eq!(parsed.symbol_name, "User");
+    }
+
+    #[test]
+    fn test_parsedannotation_equality() {
+        let kind1 = AnnotationKind::Flow {
+            to: "CreateUser".to_string(),
+            label: "user_data".to_string(),
+        };
+        let source1 = AnnotationSource::new("src/model.rs".to_string(), 10);
+        let parsed1 = ParsedAnnotation::new(kind1.clone(), source1.clone(), "User".to_string());
+
+        let kind2 = AnnotationKind::Flow {
+            to: "CreateUser".to_string(),
+            label: "user_data".to_string(),
+        };
+        let source2 = AnnotationSource::new("src/model.rs".to_string(), 10);
+        let parsed2 = ParsedAnnotation::new(kind2, source2, "User".to_string());
+
+        let kind3 = AnnotationKind::Flow {
+            to: "UpdateUser".to_string(),
+            label: "user_data".to_string(),
+        };
+        let source3 = AnnotationSource::new("src/model.rs".to_string(), 10);
+        let parsed3 = ParsedAnnotation::new(kind3, source3, "User".to_string());
+
+        let parsed4 = ParsedAnnotation::new(kind1, source1, "DifferentSymbol".to_string());
+
+        assert_eq!(parsed1, parsed2);
+        assert_ne!(parsed1, parsed3);
+        assert_ne!(parsed1, parsed4);
     }
 }
