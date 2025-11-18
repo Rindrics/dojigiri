@@ -77,6 +77,42 @@ impl AnnotationSource {
     }
 }
 
+/// Kind of annotation that can be parsed from source code
+///
+/// Note: `Entity` annotation is not needed because the entity name can be inferred
+/// from the code element (class, struct, function, etc.) that the annotation is attached to.
+///
+/// Note: `Flow` annotation does not include `from` because the source entity is implicit:
+/// it is the entity where the annotation is located. Only `to` and `label` need to be specified.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum AnnotationKind {
+    /// `@dojigiri:type <Process|DataStore|ExternalEntity>` - Sets entity type
+    Type {
+        /// Entity type value
+        entity_type: EntityType,
+    },
+    /// `@dojigiri:display "<name>"` - Overrides display name
+    Display {
+        /// Display name value
+        display_name: String,
+    },
+    /// `@dojigiri:flow -> <to>: <label>` - Declares a data flow
+    ///
+    /// The `from` entity is implicit: it is the entity where this annotation is located.
+    /// Only the target entity (`to`) and flow label need to be specified.
+    Flow {
+        /// Target entity ID
+        to: String,
+        /// Flow label/description
+        label: String,
+    },
+    /// `@dojigiri:process <name>` - Declares a process
+    Process {
+        /// Process identifier/name
+        name: String,
+    },
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -201,5 +237,57 @@ mod tests {
         assert_eq!(source1, source2);
         assert_ne!(source1, source3);
         assert_ne!(source1, source4);
+    }
+
+    #[test]
+    fn test_annotationkind_type() {
+        let kind = AnnotationKind::Type {
+            entity_type: EntityType::DataStore,
+        };
+
+        match kind {
+            AnnotationKind::Type { entity_type } => assert_eq!(entity_type, EntityType::DataStore),
+            _ => panic!("Expected Type variant"),
+        }
+    }
+
+    #[test]
+    fn test_annotationkind_display() {
+        let kind = AnnotationKind::Display {
+            display_name: "User Repository".to_string(),
+        };
+
+        match kind {
+            AnnotationKind::Display { display_name } => assert_eq!(display_name, "User Repository"),
+            _ => panic!("Expected Display variant"),
+        }
+    }
+
+    #[test]
+    fn test_annotationkind_flow() {
+        let kind = AnnotationKind::Flow {
+            to: "CreateUser".to_string(),
+            label: "user_data".to_string(),
+        };
+
+        match kind {
+            AnnotationKind::Flow { to, label } => {
+                assert_eq!(to, "CreateUser");
+                assert_eq!(label, "user_data");
+            }
+            _ => panic!("Expected Flow variant"),
+        }
+    }
+
+    #[test]
+    fn test_annotationkind_process() {
+        let kind = AnnotationKind::Process {
+            name: "CreateUser".to_string(),
+        };
+
+        match kind {
+            AnnotationKind::Process { name } => assert_eq!(name, "CreateUser"),
+            _ => panic!("Expected Process variant"),
+        }
     }
 }

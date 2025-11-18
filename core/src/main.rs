@@ -1,6 +1,6 @@
 mod model;
 
-use model::{AnnotationSource, DataFlow, Entity, EntityType};
+use model::{AnnotationKind, AnnotationSource, DataFlow, Entity, EntityType};
 
 fn main() {
     println!("dojigiri-core");
@@ -68,4 +68,17 @@ fn main() {
         source_with_column.line_number,
         source_with_column.column_number
     );
+
+    // Tracer bullet: Create and display annotation kinds
+    let type_kind = AnnotationKind::Type {
+        entity_type: EntityType::DataStore,
+    };
+    let flow_kind = AnnotationKind::Flow {
+        to: "CreateUser".to_string(),
+        label: "user_data".to_string(),
+    };
+
+    println!("\nAnnotation kinds created:");
+    println!("  {:?}", type_kind);
+    println!("  {:?}", flow_kind);
 }
